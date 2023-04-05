@@ -1,15 +1,17 @@
-<style>
-.heading1 {
+h1 {
+  color: red;
+  animation: myanimation 2s infinite;
+}
+
+@keyframes myanimation {
+  from {
     color: red;
-    font-weight:700;
-    font-size: 35px;
+  }
+  to {
+    color: yellow;
+  }
 }
-.heading2 {
-    color: blue;
-    font-weight:700;
-    font-size: 30px;
-}
-</style>
+
 <h1 id="identifier" class="heading1" style="color:red; font-weight:700; font-size: 35px;">Athena's Edge: Where AI meets productivity, and where brains and bytes converge!</h1>
 <p style="color:#00CED1; font-weight: bold;">こんにちは (Konnichiwa), AI lovers and productivity enthusiasts!</p>
 <p>Welcome to Athena's Edge, your ultimate destination for all things Artificial Intelligence (AI) and productivity! Our blog is like a well-sharpened katana that cuts through the clutter and brings you the sharpest insights and hacks on how to use AI to take your productivity to the next level!</p>
