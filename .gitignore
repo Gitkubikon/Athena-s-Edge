@@ -1,0 +1,14 @@
+node_modules
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+dist
+.env
+.env.*
+.DS_Store
+
+# Local Netlify folder
+.netlify
+
+# Cloudflare functions
+functions

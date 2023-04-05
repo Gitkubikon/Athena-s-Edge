@@ -1,0 +1,11 @@
+{
+  "css.validate": false,
+  "svelte.plugin.css.diagnostics.enable": false,
+  "eslint.validate": [
+    "svelte"
+  ],
+  "files.associations": {
+    "*.svelte": "svelte"
+  },
+  "editor.tabSize": 2
+}
