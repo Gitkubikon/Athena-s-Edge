@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="Welcome.svg" width="100%" height="100%" alt="css-in-readme" [Welcome.svg](Welcome) >
+    <img src="Welcome.svg" width="100%" height="100%" alt="css-in-readme" [Welcome](Welcome.svg) >
 </div>
 
 ## Run in SSR mode (Development)
