@@ -1,4 +1,4 @@
-<svg fill="none" height="2500" xmlns="http://www.w3.org/2000/svg">
+<svg fill="none" height="1900" xmlns="http://www.w3.org/2000/svg">
   <foreignObject width="100%" height="100%">
     <div xmlns="http://www.w3.org/1999/xhtml">
 
@@ -33,6 +33,7 @@
         color: #FF69B4; /* hot pink */
         }
         }
+
       </style>
 
       <!-- <div style="background-color: #e63946; padding: 20px; border-radius: 10px;"> -->
@@ -106,6 +107,7 @@
       <!--     together! さようなら!</p> -->
       <!-- </div> -->
 
+
       <div style="background-color: #1d3557; padding: 20px; border-radius: 10px;">
         <h1 style="text-align: center; font-size: 36px; font-weight: bold; color: #f1faee;">Athena's
           Edge</h1>
@@ -128,7 +130,7 @@
           AI blog; we are a community of AI samurais and productivity ninjas, who are constantly
           striving to empower you with the knowledge and tools to master the art of work and life!</p>
       </div>
-      <div style="background-color: #457b9d; padding: 20px; border-radius: 10px;">
+      <div style="background-color: #1d3557; padding: 20px; border-radius: 10px;">
         <h3 style="color: #f1faee; font-size: 24px;">What you can expect from Athena's Edge</h3>
         <p style="color: #f1faee; font-size: 20px;">Our blog is your arsenal of AI tools, tips, and
           techniques that will help you optimize your workflow, automate tedious tasks, and unleash
