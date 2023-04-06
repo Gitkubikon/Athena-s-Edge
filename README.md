@@ -1,11 +1,6 @@
 <div align="center">
-    <img src="Welcome.svg" width="400" height="400" alt="css-in-readme">
+    <img src="Welcome.svg" width="100%" height="100%" alt="css-in-readme">
 </div>
-
-At Athena's Edge, we believe that productivity is about working smarter, not harder. That's why we've curated a collection of AI tools that are designed to help you automate repetitive tasks and streamline your workflow. By using AI to handle the grunt work, you'll have more time and energy to focus on the creative and strategic aspects of your work.
-Components
-
-With Athena's Edge, you'll have the tools you need to take your productivity to the next level. Our AI tools are designed to help you work smarter, not harder, so you can achieve more in less time. If you have any questions or suggestions, please don't hesitate to reach out. We're here to help you build your empire!## svelte-vite-ssr
 
 ## Run in SSR mode (Development)
 ```sh
