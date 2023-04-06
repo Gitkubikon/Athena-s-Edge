@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="Welcome.svg" width="100%" height="100%" alt="css-in-readme">
+    <img src="Welcome.svg" width="100%" height="2000" alt="css-in-readme">
  <!-- <div style="margin-bottom: 10px; background-color: #a8dadc; padding: 20px; border-radius: 10px;"> -->
  <!--        <p style="color: #1d3557; font-size: 24px;">こんにちは AI lovers and productivity -->
  <!--          enthusiasts!</p> -->
