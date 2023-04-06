@@ -1,6 +1,9 @@
 <div align="center">
-    <img src="Welcome.svg" width="100%" height="100%" alt="css-in-readme" [Welcome](Welcome.svg) >
+  <a href="Welcome.svg" target="_blank">
+    <img src="Welcome.svg" width="100%" height="100%" alt="css-in-readme">
+  </a>
 </div>
+
 
 ## Run in SSR mode (Development)
 ```sh
