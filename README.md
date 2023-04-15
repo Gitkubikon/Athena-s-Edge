@@ -1,14 +1,23 @@
-# Svelte + TS + Vite
+<div align="center">
+  <a href="Welcome.svg" target="_blank">
+    <img src="Welcome.svg" width="100%" height="100%" alt="css-in-readme">
+  </a>
+</div>
 
-This template should help get you started developing with Svelte and TypeScript in Vite.
+## Svelte + TS + Vite + Deno + TailwindCSS
 
-## Recommended IDE Setup
+Svelte is a modern JavaScript framework that allows developers to build web applications with minimal overhead. It uses a declarative approach, meaning that developers only need to specify what they want the app to do, and Svelte takes care of the rest. This results in faster, more efficient code that is easier to maintain.
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+Tailwind is a CSS framework that provides a set of utility classes that allow developers to quickly style their web applications. It uses a "utility-first" approach, meaning that instead of providing pre-designed components, it provides low-level styling tools that can be composed to create any design. This results in faster development times and more flexibility in design.
 
-## Need an official Svelte framework?
+Vite is a build tool for modern web development. It is designed to be fast, lightweight, and easy to use, making it a great choice for developers who want to quickly set up and iterate on their web projects. It uses a just-in-time (JIT) compilation approach, meaning that it only builds the parts of the app that are needed, resulting in faster build times and better performance.
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+Together, Svelte, Tailwind, and Vite make for a powerful and efficient stack for building modern web applications.
+
+- https://svelte.dev/
+- https://www.typescriptlang.org/
+- https://vitejs.dev/
+- https://tailwindcss.com/
 
 ## Technical considerations
 
@@ -17,17 +26,9 @@ Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also pow
 - It brings its own routing solution which might not be preferable for some users.
 - It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
 
-This template contains as little as possible to get started with Vite + TypeScript + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
-
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
-
 **Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
 
 Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
-
-**Why include `.vscode/extensions.json`?**
-
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
 
 **Why enable `allowJs` in the TS template?**
 
@@ -44,4 +45,80 @@ If you have state that's important to retain within a component, consider creati
 // An extremely simple external store
 import { writable } from 'svelte/store'
 export default writable(0)
+```
+
+## Project Structure
+
+```scss
+
+├── public
+│   ├── api.py
+│   ├── app.py
+│   ├── categorize.py
+│   ├── content
+│   │   ├── metadata.json
+│   │   ├── NewFile1.md
+│   │   └── NewFile.md
+│   ├── img
+│   ├── robots.txt
+│   └── sitemap.xml
+│
+├── src
+│   ├── app.css                       Global CSS (includes dark : light themes)
+│   │ 
+│   ├── App.svelte                    Main APP, contains navigation
+│   │ 
+│   ├── assets                        Contains website assets (images, JSON, ...)
+│   │   └── svelte.svg
+│   │ 
+│   ├── components                    Svelte components (ArticleCard, Footer, Header, NewsletterSignup, UltraFocus)
+│   │   ├── ArticleCard.svelte
+│   │   ├── Footer.svelte
+│   │   ├── Header.svelte
+│   │   ├── NewsletterSignup.svelte
+│   │   └── UltraFocus.svelte
+│   │ 
+│   ├── routes                        Svelte pages (404, About, Article, Home, Login) and navigation components (Side, Top)
+│   │   ├── 404.svelte
+│   │   ├── About.svelte
+│   │   ├── Article.svelte
+│   │   ├── Home.svelte
+│   │   ├── Login.svelte
+│   │   └── nav
+│   │       ├── Side.svelte
+│   │       └── Top.svelte
+│   │ 
+│   ├── admin                         Svelte pages (AdminPage, ArticleForm) for managing content
+│   │   ├── AdminPage.svelte
+│   │   └── ArticleForm.svelte
+│   │ 
+│   ├── utils                         Utility scripts for the website (API request functions, article management functions, etc.)
+│   │   ├── api.ts
+│   │   ├── articles.ts
+│   │   ├── functions.ts
+│   │   ├── markdownToHtml.ts
+│   │   └── shenanigans.ts
+│   │ 
+│   ├── markdown.ts                   Function for converting Markdown to HTML
+│   ├── store.ts                      Global store for managing app state
+│   ├── main.ts                       Main entry point for the website
+│   └── catppuccin.css               Custom CSS for the website
+│
+├── svelte.config.js
+├── tsconfig.json
+├── tsconfig.node.json
+├── vite.config.ts
+├── README.md
+├── package.json
+└── package-lock.json
+```
+
+
+
+### Install and run 
+
+```
+cd hive-dashboard
+npm install
+npm run dev
 ```
