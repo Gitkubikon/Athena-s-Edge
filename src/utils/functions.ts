@@ -22,10 +22,20 @@ const functions = {
   Home: () => {
     page.set("Home")
   },
+  ArticleCard: () => {
+    page.set("ArticleCard")
+  },
+  Article: () => {
+    page.set("Article")
+  },
+  About: () => {
+    page.set("About")
+  },
   // lock: () => {
+  //
   //   lock()
   // },
-  
+
   copyColor: () => {
     const trailerElement = document.getElementById("trailer");
     const rect = trailerElement.getBoundingClientRect();

@@ -106,6 +106,7 @@
 
         if (functionClass) {
             const functionName = functionClass.split(":")[1];
+        console.log(functionName)
             functions[functionName]();
         } else {
             // Check if this function was called by the click event on divElements[0]

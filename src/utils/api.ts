@@ -3,13 +3,17 @@ import { getCookieValue, setCookie } from "./shenanigans";
 class Api {
   API_BASE_URL: string;
   token: string;
+  METADATA: JSON;
 
   constructor(API_BASE_URL: string) {
     this.API_BASE_URL = API_BASE_URL;
     this.token = getCookieValue("token");
+    this.getMetadata().then((metadata) => {
+      this.METADATA = metadata;
+    });
   }
 
-  private async request(method: string, path: string, data?: any): Promise<{ content?: string }> {
+  private async request<T>(method: string, path: string, data?: any): Promise<T> {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
     };
@@ -25,11 +29,34 @@ class Api {
     if (!response.ok) {
       throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
     }
-    const content = method === 'GET' ? await response.text() : undefined;
-    return { content };
+    const content = await response.json();
+    return content as T;
   }
 
-  login(username: string, password: string): Promise<boolean> {
+  async getMetadata(): Promise<JSON> {
+    return this.request<JSON>('GET', '/metadata');
+  }
+
+  async getContent(path: string): Promise<string | Blob> {
+    const response = await this.request<Response>('GET', `/content/${path}`);
+    console.log(await response)
+    const contentType = response.headers.get('Content-Type');
+    if (contentType?.startsWith('text/markdown')) {
+      const text = await response.text();
+      return text;
+    } else if (contentType?.startsWith('image/')) {
+      const blob = await response.blob();
+      return blob;
+    } else if (contentType?.startsWith('video/')) {
+      const blob = await response.blob();
+      return blob;
+    } else {
+      throw new Error(`Unsupported content type: ${contentType}`);
+    }
+  }
+
+
+  async login(username: string, password: string): Promise<boolean> {
     return fetch(`${this.API_BASE_URL}/login`, {
       method: 'POST',
       headers: {
@@ -54,21 +81,67 @@ class Api {
       });
   }
 
-  get(path: string): Promise<{ content?: string }> {
-    return this.request('GET', path);
+  async patch(filename: string, content?: Metadata): Promise<Response> {
+    return this.request('PATCH', '/content', { filename, ...content });
   }
 
-  post(path: string, data: any): Promise<{ content?: string }> {
-    return this.request('POST', path, data);
+  async put(filename: string, content?: Metadata): Promise<Response> {
+    return this.request('PUT', '/content', { filename, ...content });
   }
 
-  put(filename: string): Promise<{ content?: string }> {
-    return this.request('PUT', '/content', { filename });
+  async delete(filename: string): Promise<Response> {
+    return this.request<Response>('DELETE', `/content/${filename}`);
   }
+}
 
-  delete(filename: string): Promise<{ content?: string }> {
-    return this.request('DELETE', `/content/${filename}`);
-  }
+interface Metadata {
+  main_tag: string;
+  cover: string;
+  images: string[];
+  videos: string[];
+  tags: string[];
+  popularity: number;
+  created_at: string;
+  sentiment: {
+    polarity: string;
+    subjectivity: string;
+    emotions: {
+      anger: string;
+      joy: string;
+      fear: string;
+      sadness: string;
+    };
+    sentiment_categories: {
+      positive: string;
+      negative: string;
+      neutral: string;
+    };
+    sentiment_keywords: string;
+  };
+  targeting: {
+    age_range: {
+      min_age: string;
+      max_age: string;
+    };
+    location: {
+      country: string;
+      city: string;
+      region: string;
+    };
+    interests: string;
+    gender: string;
+    education_level: string;
+    income_level: string;
+    occupation: string;
+    marital_status: string;
+    parental_status: string;
+  };
+  engagement: {
+    views: number;
+    likes: number;
+    comments: number;
+    shares: number;
+  };
 }
 
 export { Api };

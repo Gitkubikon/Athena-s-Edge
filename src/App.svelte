@@ -11,6 +11,7 @@
   import About from "./routes/About.svelte";
   import Foo from "./routes/404.svelte";
   import ArticleForm from "./admin/ArticleForm.svelte";
+    import { getCookieValue } from "./utils/shenanigans";
 
   const pages = [
     { id: "Login", component: Login },
@@ -31,8 +32,11 @@
     }
   };
 
-
-
+  if (getCookieValue("token")) {
+    document
+      .querySelector(":root")
+      .style.setProperty("--ctp-mauve", "rgb(237, 135, 150)");
+  }
 </script>
 
 <main class="w-screen h-screen">
