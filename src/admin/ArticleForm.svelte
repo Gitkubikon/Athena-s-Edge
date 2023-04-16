@@ -21,10 +21,8 @@
   }
 
   async function loadContent(target: string): Promise<void> {
-    console.log(metadata[target].main_tag);
-    const response = await api.getContent(
-      `${metadata[target].main_tag}${target}/${target}`
-    );
+    console.log(target);
+    const response = await api.getContent(`${target}`);
     content = response;
     renderedContent = marked(content);
     select = true;
@@ -49,7 +47,30 @@
   async function createNewFile(): Promise<void> {
     if (!newFileName?.trim()) return;
     const filename = `${newFileName}`;
-    const response = api.put(`${filename}`);
+
+    const request: CreateContentRequest = {
+      filename: "example.jpg",
+      main_tag: "example",
+      cover: "https://example.com/cover.jpg",
+      images: [
+        "https://example.com/image1.jpg",
+        "https://example.com/image2.jpg",
+      ],
+      videos: [
+        "https://example.com/video1.mp4",
+        "https://example.com/video2.mp4",
+      ],
+      tags: ["example", "test"],
+    };
+
+    api.createContent(request)
+      .then((response) => {
+        console.log("Content created:", response);
+      })
+      .catch((error) => {
+        console.error("Failed to create content:", error);
+      });
+
     if (response) {
       contentFiles.push(filename);
       selectedContentFile = filename;

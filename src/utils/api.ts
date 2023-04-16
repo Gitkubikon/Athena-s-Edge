@@ -39,7 +39,6 @@ class Api {
 
   async getContent(path: string): Promise<string | Blob> {
     const response = await this.request<Response>('GET', `/content/${path}`);
-    console.log(await response)
     const contentType = response.headers.get('Content-Type');
     if (contentType?.startsWith('text/markdown')) {
       const text = await response.text();
@@ -85,13 +84,43 @@ class Api {
     return this.request('PATCH', '/content', { filename, ...content });
   }
 
-  async put(filename: string, content?: Metadata): Promise<Response> {
-    return this.request('PUT', '/content', { filename, ...content });
+
+
+  async createContent(request: CreateContentRequest): Promise<CreateContentResponse> {
+    const response = await fetch('/content', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(request)
+    });
+
+    const responseData = await response.json();
+
+    if (!response.ok) {
+      throw new Error(responseData.error || 'Failed to create content');
+    }
+
+    return responseData;
   }
 
   async delete(filename: string): Promise<Response> {
     return this.request<Response>('DELETE', `/content/${filename}`);
   }
+}
+
+interface CreateContentRequest {
+  filename: string;
+  main_tag: string;
+  cover: string;
+  images: string[];
+  videos: string[];
+  tags: string[];
+}
+
+interface CreateContentResponse {
+  success: boolean;
+  error?: string;
 }
 
 interface Metadata {

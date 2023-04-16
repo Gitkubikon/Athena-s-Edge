@@ -35,6 +35,15 @@ def login():
     else:
         return jsonify(success=False, error='Invalid credentials'), 401
 
+# Protected routes
+@app.route('/metadata', methods=['GET'])
+def get_content_metadata():
+    try:
+        with open(os.path.join(CONTENT_DIR, 'metadata.json')) as f:
+            return f.read()
+    except FileNotFoundError:
+        return '', 404
+
 def update_metadata(path):
     # Load metadata
     metadata_path = os.path.join(CONTENT_DIR, METADATA_FILE)
@@ -51,34 +60,19 @@ def update_metadata(path):
     with open(metadata_path, 'w') as f:
         json.dump(metadata, f)
 
-# Protected routes
-@app.route('/metadata', methods=['GET'])
-def get_content_metadata():
+@app.route('/content/<main_tag>/<filename>', methods=['GET'])
+def get_content(main_tag, filename):
+    directory = os.path.join(CONTENT_DIR, main_tag, filename)
+    if not os.path.isdir(directory):
+        return jsonify(success=False, error='Directory not found')
     try:
-        with open(os.path.join(CONTENT_DIR, 'metadata.json')) as f:
-            return f.read()
-    except FileNotFoundError:
-        return '', 404
-
-@app.route('/content/<path:path>', methods=["GET"])
-def get_content(path):
-    try:
-        # Increment popularity count
-        update_metadata(path)
-
-        full_path = os.path.join(CONTENT_DIR, path)
-
-        # If it's a directory, return a list of files and directories inside it
-        if os.path.isdir(full_path):
-            file_list = os.listdir(full_path)
-            return {'files': file_list}
-
-        # If it's a file, return the contents of the file
-        with open(full_path) as f:
-            return f.read()
-
-    except FileNotFoundError:
-        return '', 404
+        files = []
+        for (dirpath, dirnames, filenames) in os.walk(directory):
+            for file in filenames:
+                files.append(os.path.join(dirpath, file))
+        return jsonify(success=True, files=files)
+    except Exception as e:
+        return jsonify(success=False, error=str(e))
 
 @app.route('/content', methods=['PATCH'])
 def update_content():
@@ -91,6 +85,7 @@ def update_content():
     images = request.json.get('images', [])
     videos = request.json.get('videos', [])
     tags = request.json.get('tags', [])
+    markdown_content = request.json.get('markdown_content', '')  # New line to get markdown content
 
     # Get the directory structure
     directory = os.path.join(CONTENT_DIR, main_tag, filename)
@@ -139,6 +134,13 @@ def update_content():
 
     with open(metadata_path, 'w') as f:
         json.dump(metadata, f)
+
+    # Update markdown file
+    try:
+        with io.open(os.path.join(directory, f'{filename}.md'), 'w', encoding='utf-8') as f:  # Write to Markdown file
+            f.write(markdown_content)
+    except Exception as e:
+        return jsonify(success=False, error=str(e))
 
     return jsonify(success=True)
 
@@ -260,11 +262,37 @@ def create_content():
     return jsonify(success=True)
 
 @app.route('/content/<path:path>', methods=['DELETE'])
-def delete_content(path):
+def delete_content_dir(path):
     try:
         os.remove(os.path.join(CONTENT_DIR, path))
 
         # Delete metadata
+        metadata_path = os.path.join(CONTENT_DIR, METADATA_FILE)
+        with open(metadata_path) as f:
+            metadata = json.load(f)
+        del metadata[path]
+        with open(metadata_path, 'w') as f:
+            json.dump(metadata, f)
+
+        return jsonify(success=True)
+    except Exception as e:
+        return jsonify(success=False, error=str(e))
+
+@app.route('/content/delete/<path:path>', methods=['DELETE'])
+def delete_content(path):
+    try:
+        # Parse path to extract filename and directory structure
+        path_elements = path.split('/')
+        filename = path_elements[-1]
+        directory = os.path.join(CONTENT_DIR, *path_elements[:-1])
+
+        # Construct full path to file
+        file_to_delete = os.path.join(directory, filename)
+
+        # Delete file
+        os.remove(file_to_delete)
+
+        # Remove file from metadata
         metadata_path = os.path.join(CONTENT_DIR, METADATA_FILE)
         with open(metadata_path) as f:
             metadata = json.load(f)
