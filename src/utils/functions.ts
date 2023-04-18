@@ -1,5 +1,15 @@
-import { page } from "../store";
+import { page, testApiDivs } from "../store";
 import { deleteAllCookies, getCookieValue } from "./shenanigans";
+import {
+  testCreateArticle,
+  testUpdateArticle,
+  testUploadMedia,
+  testGetArticle,
+  testGetVideo,
+  testGetArticleMetadata,
+  testDeleteMedia,
+  testDeleteArticle
+} from "./testapi";
 
 var theme: string;
 
@@ -13,26 +23,159 @@ if (window.matchMedia) {
 
 const functions = {
 
-  auth: () => {
-
-  },
   Foo: () => {
     page.set("Foo")
   },
   Home: () => {
     page.set("Home")
   },
-  ArticleCard: () => {
-    page.set("ArticleCard")
+  Login: () => {
+    page.set("Login")
   },
-  Article: () => {
-    page.set("Article")
+  AdminPage: () => {
+    page.set("AdminPage")
   },
-  About: () => {
-    page.set("About")
+  StyleGuide: () => {
+    page.set("StyleGuide")
+  },
+  TestApi: async () => {
+
+    const testFunctions = {
+      testCreateArticle,
+      testUpdateArticle,
+      testUploadMedia,
+      testGetArticle,
+      testGetVideo,
+      testGetArticleMetadata,
+      testDeleteMedia,
+      testDeleteArticle,
+    };
+
+    const testResults = {};
+
+    for (const [key, value] of Object.entries(testFunctions)) {
+      const result = await value();
+      testResults[key] = result;
+    }
+
+    for (const [key, result] of Object.entries(testResults)) {
+      const headerDiv = document.createElement("div");
+      const contentDiv = document.createElement("div");
+
+      headerDiv.innerText = `Test: ${key}`;
+      contentDiv.style.display = "block";
+
+      if (result.success) {
+        headerDiv.classList.add("test-header", "test-success");
+        headerDiv.innerHTML = `${result.name} Succeeded!`;
+        // contentDiv.innerHTML = `<pre>Data: ${formatJson(result.data)}</pre>`;
+        contentDiv.appendChild(jsonToHtml(result))
+      } else {
+        headerDiv.classList.add("test-header", "test-failure");
+        headerDiv.innerHTML = `${result.name} Failed!`;
+        // contentDiv.innerHTML = `<pre>Error: ${formatJson(result.error)}</pre>`;
+        contentDiv.appendChild(jsonToHtml(result.error))
+      }
+
+      headerDiv.addEventListener("click", () => {
+        contentDiv.style.display = contentDiv.style.display === "none" ? "block" : "none";
+      });
+
+      testApiDivs.update((divs) => [...divs, headerDiv, contentDiv]);
+    }
+
+    function jsonToHtml(json) {
+      const container = document.createElement('div');
+      for (const key in json) {
+        if (json.hasOwnProperty(key)) {
+          const value = json[key];
+          const valueType = typeof value;
+          const item = document.createElement('div');
+          item.innerHTML += `<strong>${key}:</strong> `;
+
+          if (key === "stack") {
+          } else {
+            if (value === null) {
+              item.innerHTML += 'null';
+              item.classList.add('json-null');
+            } else if (valueType === 'object') {
+              item.classList.add('json-object');
+              const subContainer = jsonToHtml(value);
+              subContainer.style.display = 'none';
+              item.appendChild(subContainer);
+            } else {
+              item.innerHTML += value;
+              item.classList.add(`json-${valueType}`);
+            }
+          }
+
+          container.appendChild(item);
+        }
+      }
+      return container;
+    }
+
+
+
+
+
+
+    // function jsonToHtml(json) {
+    //   const container = document.createElement('div');
+    //   for (const key in json) {
+    //     if (json.hasOwnProperty(key)) {
+    //       const value = json[key];
+    //       const valueType = typeof value;
+    //       const item = document.createElement('div');
+    //       // const button = document.createElement('div'); // Add a new button
+    //       // button.innerHTML = '-'; // Set the initial label of the button
+    //       // button.classList.add('ultrafocus'); // Add a class to the button for styling
+    //       // button.classList.add('button'); // Add a class to the button for styling
+    //       // item.appendChild(button); // Add the button to the item div
+    //       item.innerHTML += `<strong>${key}:</strong> `; // Add the rest of the item content
+    //       if (value === null) {
+    //         item.innerHTML += 'null';
+    //         item.classList.add('json-null');
+    //       } else if (valueType === 'object') {
+    //         item.classList.add('json-object');
+    //         const subContainer = jsonToHtml(value);
+    //         subContainer.style.display = 'none'; // Set the subContainer to be hidden by default
+    //         item.appendChild(subContainer);
+
+    //         // Create an on:click function for the button
+    //         // button.onclick = () => {
+    //         //   if (subContainer.style.display === 'none') {
+    //         //     subContainer.style.display = 'block'; // Toggle display property
+    //         //     button.innerHTML = '-';
+    //         //   } else {
+    //         //     subContainer.style.display = 'none'; // Toggle display property
+    //         //     button.innerHTML = '+';
+    //         //   }
+    //         // };
+    //       } else {
+    //         item.innerHTML += value;
+    //         item.classList.add(`json-${valueType}`);
+    //       }
+    //       container.appendChild(item);
+    //     }
+    //   }
+    //   return container;
+    // }
+
+
+
+
+
+
+
+
+
+
+
+
+
   },
   // lock: () => {
-  //
   //   lock()
   // },
 
@@ -50,7 +193,7 @@ const functions = {
     const color = window.getComputedStyle(element).backgroundColor;
     navigator.clipboard
       .writeText(color)
-      .then(() => console.log(`Color ${color} copied to clipboard`))
+      .then(() => alert(`Color ${color} copied to clipboard`))
       .catch((error) =>
         console.error(`Error copying color to clipboard: ${error}`)
       );

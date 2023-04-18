@@ -1,28 +1,18 @@
-<script lang="ts">
-  import { fade } from "svelte/transition";
-  import ArticleCard from "../components/ArticleCard.svelte";
-  import { api } from "../main";
-  import { getCookieValue, onUltraMount } from "../utils/shenanigans";
+<div>
+    <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
+    </a>
+    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
+    </a>
+  </div>
+  <h1>Vite + Svelte</h1>
 
-  let contentFiles: string[] = [];
+  <div class="card">
+  </div>
 
-  onUltraMount(async (): Promise<void> => {
-    api.getMetadata().then((metadata) => {
-      contentFiles = Object.keys(metadata);
-    });
-  });
-</script>
+  <p>
+    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank" rel="noreferrer">SvelteKit</a>, the official Svelte app framework powered by Vite!
+  </p>
 
-<div transition:fade>
-  {#each contentFiles as fileName}
-    <ArticleCard {fileName} filename={fileName} />
-  {/each}
-</div>
-
-<style>
-  div {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-</style>
+  <p class="read-the-docs ultrafocus zone">
+    Click on the Vite and Svelte logos to learn more
+  </p>

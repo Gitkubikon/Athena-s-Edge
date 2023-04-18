@@ -1,62 +1,55 @@
+import axios from 'axios';
 import { getCookieValue, setCookie } from "./shenanigans";
 
-class Api {
-  API_BASE_URL: string;
-  token: string;
-  METADATA: JSON;
-
-  constructor(API_BASE_URL: string) {
-    this.API_BASE_URL = API_BASE_URL;
-    this.token = getCookieValue("token");
-    this.getMetadata().then((metadata) => {
-      this.METADATA = metadata;
-    });
-  }
-
-  private async request<T>(method: string, path: string, data?: any): Promise<T> {
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
+interface ArticleMetadata {
+  [key: string]: {
+    main_tag: string;
+    images?: string[];
+    videos?: string[];
+    tags?: string[];
+    popularity?: number;
+    created_at?: string;
+    modified_at?: string;
+    sentiment?: {
+      sentiment_categories?: {
+        positive?: string;
+        negative?: string;
+        neutral?: string;
+      };
+      sentiment_keywords?: string;
     };
-    if (this.token) {
-      headers['Authorization'] = `Bearer ${this.token}`;
-    }
-    const body = data ? JSON.stringify(data) : undefined;
-    const response = await fetch(`${this.API_BASE_URL}${path}`, {
-      method,
-      headers,
-      body,
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
-    }
-    const content = await response.json();
-    return content as T;
-  }
+    engagement?: {
+      views?: number;
+      likes?: number;
+      comments?: number;
+      shares?: number;
+    };
+  };
+}
 
-  async getMetadata(): Promise<JSON> {
-    return this.request<JSON>('GET', '/metadata');
-  }
+class API {
+  private baseUrl: string;
+  private token: string;
 
-  async getContent(path: string): Promise<string | Blob> {
-    const response = await this.request<Response>('GET', `/content/${path}`);
-    const contentType = response.headers.get('Content-Type');
-    if (contentType?.startsWith('text/markdown')) {
-      const text = await response.text();
-      return text;
-    } else if (contentType?.startsWith('image/')) {
-      const blob = await response.blob();
-      return blob;
-    } else if (contentType?.startsWith('video/')) {
-      const blob = await response.blob();
-      return blob;
-    } else {
-      throw new Error(`Unsupported content type: ${contentType}`);
-    }
+  constructor(baseUrl: string) {
+    this.baseUrl = baseUrl;
+    this.token = getCookieValue("token");
+
+    // Bind this to arrow function to access class properties
+    axios.interceptors.request.use(
+      (config) => {
+        config.headers['Authorization'] = `Bearer ${this.token}`;
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
   }
 
 
   async login(username: string, password: string): Promise<boolean> {
-    return fetch(`${this.API_BASE_URL}/login`, {
+    return fetch(`${this.baseUrl}/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -80,97 +73,94 @@ class Api {
       });
   }
 
-  async patch(filename: string, content?: Metadata): Promise<Response> {
-    return this.request('PATCH', '/content', { filename, ...content });
+
+  async createArticle(
+    mainTag: string,
+    articleName: string,
+    articleContent: string
+  ): Promise<void> {
+    await axios.put(
+      `${this.baseUrl}/articles/${mainTag}/${articleName}`,
+      {
+        content: articleContent
+      }
+    );
   }
 
+  async getArticleMetadata(): Promise<Record<string, ArticleMetadata>> {
+    const response = await axios.get(`${this.baseUrl}/metadata`);
+    return response.data;
+  }
 
+  async getArticle(mainTag: string, articleName: string): Promise<string> {
+    const response = await axios.get(
+      `${this.baseUrl}/articles/${mainTag}/${articleName}`
+    );
+    return response.data;
+  }
 
-  async createContent(request: CreateContentRequest): Promise<CreateContentResponse> {
-    const response = await fetch('/content', {
-      method: 'PUT',
+  async updateArticle(
+    mainTag: string,
+    articleName: string,
+    newContent: string
+  ): Promise<void> {
+    await axios.patch(
+      `${this.baseUrl}/articles/${mainTag}/${articleName}`,
+      {
+        content: newContent
+      }
+    );
+  }
+
+  async deleteArticle(mainTag: string, articleName: string): Promise<void> {
+    await axios.delete(
+      `${this.baseUrl}/articles/${mainTag}/${articleName}`
+    );
+  }
+
+  async uploadMedia(category: string, article: string, mediaType: string, filename: string, file: File): Promise<void> {
+    // Create a FormData object to send the file
+    const formData = new FormData();
+    formData.append('file', file);
+
+    // Make the PUT request to the API endpoint
+    const response = await axios.put(`${this.baseUrl}/media/${category}/${article}/${mediaType}/${filename}`, formData, {
       headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(request)
+        'Content-Type': 'multipart/form-data'
+      }
     });
-
-    const responseData = await response.json();
-
-    if (!response.ok) {
-      throw new Error(responseData.error || 'Failed to create content');
-    }
-
-    return responseData;
   }
 
-  async delete(filename: string): Promise<Response> {
-    return this.request<Response>('DELETE', `/content/${filename}`);
+  // async getMedia(mainTag: string, articleName: string, mediaType: string, mediaName: string): Promise<Buffer> {
+  //   const response = await axios.get(
+  //     `${this.baseUrl}/media/${mainTag}/${articleName}/${mediaType}/${mediaName}`,
+  //     {
+  //       responseType: 'stream'
+  //     }
+  //   );
+  //   return Buffer.from(response.data, 'binary');
+  //   // const buffer = Buffer.from(response.data.readAll())
+  //   // return buffer;
+  // }
+
+async getMedia(mainTag: string, articleName: string, mediaType: string, mediaName: string): Promise<string> {
+  const response = await axios.get(
+    `${this.baseUrl}/media/${mainTag}/${articleName}/${mediaType}/${mediaName}`
+  );
+  const blob = new Blob([response.data]);
+  const objectUrl = URL.createObjectURL(blob);
+  return objectUrl;
+}
+
+  public async deleteMedia(
+    category: string,
+    articleId: string,
+    mediaType: "images" | "videos" | "cover",
+    mediaId: string
+  ) {
+    await axios.delete(`${this.baseUrl}/media/${category}/${articleId}/${mediaType}/${mediaId}`);
   }
+
 }
 
-interface CreateContentRequest {
-  filename: string;
-  main_tag: string;
-  cover: string;
-  images: string[];
-  videos: string[];
-  tags: string[];
-}
-
-interface CreateContentResponse {
-  success: boolean;
-  error?: string;
-}
-
-interface Metadata {
-  main_tag: string;
-  cover: string;
-  images: string[];
-  videos: string[];
-  tags: string[];
-  popularity: number;
-  created_at: string;
-  sentiment: {
-    polarity: string;
-    subjectivity: string;
-    emotions: {
-      anger: string;
-      joy: string;
-      fear: string;
-      sadness: string;
-    };
-    sentiment_categories: {
-      positive: string;
-      negative: string;
-      neutral: string;
-    };
-    sentiment_keywords: string;
-  };
-  targeting: {
-    age_range: {
-      min_age: string;
-      max_age: string;
-    };
-    location: {
-      country: string;
-      city: string;
-      region: string;
-    };
-    interests: string;
-    gender: string;
-    education_level: string;
-    income_level: string;
-    occupation: string;
-    marital_status: string;
-    parental_status: string;
-  };
-  engagement: {
-    views: number;
-    likes: number;
-    comments: number;
-    shares: number;
-  };
-}
-
-export { Api };
+export { API }

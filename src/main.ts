@@ -1,8 +1,8 @@
 import './app.css';
 import App from './App.svelte';
-import { Api } from './utils/api';
+import { API } from './utils/api';
 
-export const api = new Api(`${window.location.protocol}//${window.location.hostname}`)
+export const api = new API(`${window.location.protocol}//${window.location.hostname}`)
 
 const app = new App({
   target: document.getElementById('app'),

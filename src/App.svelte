@@ -2,6 +2,7 @@
   // @ts-nocheck
 
   import { page, updateElements } from "./store";
+  import { getCookieValue } from "./utils/shenanigans.ts";
   import Trailer from "./utils/UltraFocus.svelte";
   import Top from "./routes/nav/Top.svelte";
   import Side from "./routes/nav/Side.svelte";
@@ -11,7 +12,8 @@
   import About from "./routes/About.svelte";
   import Foo from "./routes/404.svelte";
   import ArticleForm from "./admin/ArticleForm.svelte";
-    import { getCookieValue } from "./utils/shenanigans";
+  import AdminPage from "./admin/AdminPage.svelte";
+  import StyleGuide from "./routes/StyleGuide.svelte";
 
   const pages = [
     { id: "Login", component: Login },
@@ -19,6 +21,8 @@
     { id: "Article", component: Article },
     { id: "About", component: About },
     { id: "Foo", component: ArticleForm },
+    { id: "AdminPage", component: AdminPage },
+    { id: "StyleGuide", component: StyleGuide },
   ];
 
   const getComponent = function () {
@@ -44,9 +48,7 @@
   <div class="flex flex-row">
     <Side />
     <div id="sectionback">
-      <section>
-        <svelte:component this={getComponent()} />
-      </section>
+      <svelte:component this={getComponent()} />
     </div>
   </div>
 </main>

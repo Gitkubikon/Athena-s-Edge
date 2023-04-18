@@ -6,14 +6,13 @@
   import { onUltraMount } from "../utils/shenanigans";
   import { fade, fly } from "svelte/transition";
 
-  let content: string | Blob = "";
+  let content: string = "";
   let renderedContent: string | undefined;
   let contentFiles: string[] = [];
   let selectedContentFile: string | undefined;
   let select: boolean = false;
   let edit: boolean = false;
   let newFileName: string | undefined;
-  let metadata: JSON;
 
   function demarked(html: string): string {
     const turndownService = new TurndownService();
@@ -21,62 +20,59 @@
   }
 
   async function loadContent(target: string): Promise<void> {
-    console.log(target);
-    const response = await api.getContent(`${target}`);
-    content = response;
+    const response = await api.get(`/content/${target}`);
+    content = response.content;
     renderedContent = marked(content);
     select = true;
     selectedContentFile = target;
   }
+
   onUltraMount(async (): Promise<void> => {
-    api.getMetadata().then((response) => {
-      metadata = response;
-      contentFiles = Object.keys(metadata);
-    });
+    const response = await api.get("/content");
+    contentFiles = JSON.parse(response.content);
+    // Load the first file by default
+    // if (contentFiles.length > 0) {
+    //   await loadContent(contentFiles[0]);
+    // }
   });
+
+  // async function createContent(content, url) {
+  //   const template = {
+  //     [selectedContentFile]: {
+  //       tags: "",
+  //       content,
+  //       upvotes: "",
+  //       downvotes: "",
+  //       comments: {
+  //         user: "comment",
+  //       },
+  //       hot: "",
+  //     },
+  //   };
+  //   const outputContent = JSON.stringify(template);
+  //   await api.post(url, { content: outputContent });
+  // }
 
   const handleContentChange = (event: { target: { value: string } }): void => {
     content = demarked(event.target.value);
-    api.patch(`/content/${selectedContentFile}`, { content });
+    api.post(`/content/${selectedContentFile}`, { content });
   };
   const handleChange = (event: { target: { value: string } }): void => {
     content = event.target.value;
-    api.patch(`/content/${selectedContentFile}`, { content });
+    api.post(`/content/${selectedContentFile}`, { content });
   };
 
   async function createNewFile(): Promise<void> {
     if (!newFileName?.trim()) return;
-    const filename = `${newFileName}`;
-
-    const request: CreateContentRequest = {
-      filename: "example.jpg",
-      main_tag: "example",
-      cover: "https://example.com/cover.jpg",
-      images: [
-        "https://example.com/image1.jpg",
-        "https://example.com/image2.jpg",
-      ],
-      videos: [
-        "https://example.com/video1.mp4",
-        "https://example.com/video2.mp4",
-      ],
-      tags: ["example", "test"],
-    };
-
-    api.createContent(request)
-      .then((response) => {
-        console.log("Content created:", response);
-      })
-      .catch((error) => {
-        console.error("Failed to create content:", error);
-      });
-
-    if (response) {
+    const filename = `${newFileName}.md`;
+    const response = await api.put(`${filename}`);
+    if (response.status === 200) {
       contentFiles.push(filename);
       selectedContentFile = filename;
       newFileName = "";
       await loadContent(selectedContentFile);
-      contentFiles = Object.keys(metadata);
+      const response = await api.get("/content");
+      contentFiles = JSON.parse(response.content);
     }
   }
 </script>
@@ -133,9 +129,7 @@
   </div>
 {:else}
   <div transition:fly={{ x: 200 }}>
-    <div
-      style="display: flex; flex-direction: row; justify-content: space-evenly;"
-    >
+    <div style="display: flex; flex-direction: row; justify-content: space-evenly;">
       <div class="button ultrafocus" on:click={() => (select = false)}>
         Back to Card Menu
       </div>

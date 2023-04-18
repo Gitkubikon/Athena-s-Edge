@@ -2,14 +2,14 @@
 </script>
 
 <nav class="nav" id="topnav">
-  <div class="button ultrafocus mobilenavshow function:toggleMobileNav">
-    <svg class="navsvg" width="42" height="42" fill="none" viewBox="0 0 45 45">
-      <path
-        fill="var(--ctp-mauve)"
-        d="m40.75 31.222-2.879 3.07L27.642 23.25l10.23-11.042 2.878 3.07-7.268 7.972 7.268 7.972ZM4 10h26.542v4.417H4V10Zm0 15.458v-4.416h20.417v4.416H4ZM4 36.5v-4.417h26.542V36.5H4Z"
-      />
-    </svg>
-  </div>
+  <!-- <div class="button ultrafocus mobilenavshow function:toggleMobileNav"> -->
+  <!--   <svg class="navsvg" width="42" height="42" fill="none" viewBox="0 0 45 45"> -->
+  <!--     <path -->
+  <!--       fill="var(--ctp-mauve)" -->
+  <!--       d="m40.75 31.222-2.879 3.07L27.642 23.25l10.23-11.042 2.878 3.07-7.268 7.972 7.268 7.972ZM4 10h26.542v4.417H4V10Zm0 15.458v-4.416h20.417v4.416H4ZM4 36.5v-4.417h26.542V36.5H4Z" -->
+  <!--     /> -->
+  <!--   </svg> -->
+  <!-- </div> -->
 
   <div class="function:Foo logo" style="margin-top: 5px; margin-left: -46px;">
     <svg

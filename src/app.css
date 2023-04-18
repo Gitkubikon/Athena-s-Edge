@@ -17,6 +17,49 @@
 
 }
 
+  .test-header {
+    font-weight: bold;
+    margin-bottom: 5px;
+    
+  }
+  .test-description {
+    margin-bottom: 5px;
+  }
+  .test-result {
+    padding: 5px;
+    margin-top: 5px;
+    background-color: var(--ctp-base) !important;
+  }
+  .test-success {
+    background-color: rgb(166, 218, 149) !important;
+    color: rgb(54, 58, 79) !important;
+  }
+  .test-failure {
+    background-color: rgb(237, 135, 150) !important;
+    color: rgb(54, 58, 79) !important;
+  }
+
+  .json-key {
+    color: #d08770 !important; /* orange */
+    font-weight: bold;
+  }
+
+  .json-string {
+    color: #8fbcbb !important; /* teal */
+  }
+
+  .json-boolean {
+    color: #bf616a !important; /* red */
+  }
+
+  .json-null {
+    color: #ebcb8b !important; /* yellow */
+  }
+  .json-key {
+    color: blue !important; /* yellow */
+  }
+
+
 a {
   font-weight: 500;
   color: var(--ctp-mauve);
