@@ -40,7 +40,6 @@ export async function testGetVideo() {
 export async function testGetArticle() {
   try {
     const article = await api.getArticle("test_category", "test_article");
-    console.log(article)
     return { success: true, data: article, name: "GET Article" };
   } catch (error) {
     return { success: false, error: error, name: "GET Article" };

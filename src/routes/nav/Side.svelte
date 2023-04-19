@@ -9,7 +9,7 @@
       <div />
       <div class="flex flex-col">
         <!-- <div class="button ultrafocus" /> -->
-        <div class="function:Login button ultrafocus">
+        <div class="button ultrafocus">
           <svg
             class="navsvg"
             width="45"
@@ -109,7 +109,7 @@
           </svg>
         </div>
       </div>
-      <div class="function:AdminPage button ultrafocus">
+      <div class=" button ultrafocus">
         <svg
           class="navsvg"
           width="45"

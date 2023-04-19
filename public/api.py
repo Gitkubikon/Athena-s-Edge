@@ -34,7 +34,6 @@ def login():
 
 # Protected routes
 @app.route('/metadata', methods=['GET'])
-@jwt_required()
 def get_content_metadata():
     try:
         with open(os.path.join(CONTENT_FOLDER, 'metadata.json')) as f:

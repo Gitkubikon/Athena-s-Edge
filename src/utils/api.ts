@@ -77,18 +77,18 @@ class API {
   async createArticle(
     mainTag: string,
     articleName: string,
-  ): Promise<void> {
-    await axios.put(
+  ): Promise<Response> {
+    return await axios.put(
       `${this.baseUrl}/articles/${mainTag}/${articleName}`,
     );
   }
 
-  async getArticleMetadata(): Promise<Record<string, ArticleMetadata>> {
+  async getArticleMetadata(): Promise<ArticleMetadata> {
     const response = await axios.get(`${this.baseUrl}/metadata`);
     return response.data;
   }
 
-  async getArticle(mainTag: string, articleName: string): Promise<string> {
+  async getArticle(mainTag: string, articleName: string): Promise<Response> {
     const response = await axios.get(
       `${this.baseUrl}/articles/${mainTag}/${articleName}`
     );

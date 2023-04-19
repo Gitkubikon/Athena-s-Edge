@@ -1,5 +1,5 @@
 import { page, testApiDivs } from "../store";
-import { deleteAllCookies, getCookieValue } from "./shenanigans";
+import { deleteAllCookies, deleteCookie, getCookieValue } from "./shenanigans";
 import {
   testCreateArticle,
   testUpdateArticle,
@@ -21,6 +21,7 @@ if (window.matchMedia) {
   }
 }
 
+
 const functions = {
 
   Foo: () => {
@@ -29,26 +30,30 @@ const functions = {
   Home: () => {
     page.set("Home")
   },
-  Login: () => {
-    page.set("Login")
-  },
   AdminPage: () => {
     page.set("AdminPage")
   },
+  ArticleForm: () => {
+    page.set("ArticleForm")
+  },
   StyleGuide: () => {
     page.set("StyleGuide")
+  },
+  Logout: () => {
+    deleteCookie("token")
+    page.set("Foo")
   },
   TestApi: async () => {
 
     const testFunctions = {
       testCreateArticle,
-      // testUpdateArticle,
-      // testUploadMedia,
-      // testGetArticle,
-      // testGetVideo,
-      // testGetArticleMetadata,
-      // testDeleteMedia,
-      // testDeleteArticle,
+      testUpdateArticle,
+      testUploadMedia,
+      testGetArticle,
+      testGetVideo,
+      testGetArticleMetadata,
+      testDeleteMedia,
+      testDeleteArticle,
     };
 
     const testResults = {};
@@ -69,12 +74,13 @@ const functions = {
         headerDiv.classList.add("test-header", "test-success");
         headerDiv.innerHTML = `${result.name} Succeeded!`;
         // contentDiv.innerHTML = `<pre>Data: ${formatJson(result.data)}</pre>`;
-        contentDiv.appendChild(jsonToHtml(result))
+        // contentDiv.appendChild(jsonToHtml(result))
       } else {
         headerDiv.classList.add("test-header", "test-failure");
         headerDiv.innerHTML = `${result.name} Failed!`;
         // contentDiv.innerHTML = `<pre>Error: ${formatJson(result.error)}</pre>`;
-        contentDiv.appendChild(jsonToHtml(result.error))
+        contentDiv.appendChild(jsonToHtml(result));
+        // console.log(result.error)
       }
 
       headerDiv.addEventListener("click", () => {

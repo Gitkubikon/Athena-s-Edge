@@ -36,7 +36,7 @@
   </div>
   <div id="divider-center" />
   <div class="flex topnav-buttons justify-start">
-    <div class="function:UltrafocusToggle button ultrafocus">
+    <div class="function button ultrafocus">
       <svg
         class="navsvg"
         width="42"
@@ -66,7 +66,7 @@
       </svg>
     </div>
 
-    <div class="button function:StyleGuide ultrafocus">
+    <div class="button ultrafocus">
       <svg
         class="navsvg"
         width="42"

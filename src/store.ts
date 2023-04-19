@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 
-export const page = writable("AdminPage");
+export const page = writable("Home");
 
 export const elementsStore = writable([]);
 

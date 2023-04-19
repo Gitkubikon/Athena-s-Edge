@@ -14,22 +14,21 @@
   import ArticleForm from "./admin/ArticleForm.svelte";
   import AdminPage from "./admin/AdminPage.svelte";
   import StyleGuide from "./routes/StyleGuide.svelte";
+  import Footer from "./components/Footer.svelte";
 
   const pages = [
     { id: "Login", component: Login },
     { id: "Home", component: Home },
     { id: "Article", component: Article },
     { id: "About", component: About },
-    { id: "Foo", component: ArticleForm },
+    { id: "Foo", component: Foo },
     { id: "AdminPage", component: AdminPage },
+    { id: "ArticleForm", component: ArticleForm },
     { id: "StyleGuide", component: StyleGuide },
   ];
 
   const getComponent = function () {
     try {
-      if (window.location.pathname.includes("/Login")) {
-        return Login;
-      }
       return pages.find((p) => p.id === $page).component;
     } catch (e) {
       return Foo;
@@ -40,7 +39,23 @@
     document
       .querySelector(":root")
       .style.setProperty("--ctp-mauve", "rgb(237, 135, 150)");
+    page.set("AdminPage");
   }
+
+  let currentTry = 0;
+  const sequence = ["g", "i", "g", "a", "c", "h", "a", "d"];
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === sequence[currentTry]) {
+      currentTry++;
+      if (currentTry === sequence.length) {
+        page.set("AdminPage");
+        currentTry = 0;
+      }
+    } else {
+      currentTry = 0;
+    }
+  });
 </script>
 
 <main class="w-screen h-screen">

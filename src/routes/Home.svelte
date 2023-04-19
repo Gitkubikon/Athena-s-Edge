@@ -1,18 +1,25 @@
-<div>
-    <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-    </a>
-  </div>
-  <h1>Vite + Svelte</h1>
+<script>
+  import ArticleCard from "../components/ArticleCard.svelte";
+  import Footer from "../components/Footer.svelte";
+  import { api } from "../main";
+  import { onUltraMount } from "../utils/shenanigans";
 
-  <div class="card">
-  </div>
+  onUltraMount(async () => {
+    
+    const meta = await api.getArticleMetadata();
+    console.log(meta);
+  });
+</script>
 
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank" rel="noreferrer">SvelteKit</a>, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs ultrafocus zone">
-    Click on the Vite and Svelte logos to learn more
-  </p>
+<section>
+  <ArticleCard
+    upload_date="Level 4"
+    name="The Barbarian"
+    description="The Barbarian is a kilt-clad Scottish warrior with an angry, battle-ready expression, hungry for destruction. He has Killer yellow horseshoe mustache."
+    imgSrc="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/barbarian.png"
+    dislikes="20"
+    main_tag="16"
+    likes="150"
+  />
+  <Footer />
+</section>

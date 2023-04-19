@@ -15,49 +15,76 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
+
 }
 
-  .test-header {
-    font-weight: bold;
-    margin-bottom: 5px;
-    
-  }
-  .test-description {
-    margin-bottom: 5px;
-  }
-  .test-result {
-    padding: 5px;
-    margin-top: 5px;
-    background-color: var(--ctp-base) !important;
-  }
-  .test-success {
-    background-color: rgb(166, 218, 149) !important;
-    color: rgb(54, 58, 79) !important;
-  }
-  .test-failure {
-    background-color: rgb(237, 135, 150) !important;
-    color: rgb(54, 58, 79) !important;
-  }
+* {
+  cursor: none !important;
+}
 
-  .json-key {
-    color: #d08770 !important; /* orange */
-    font-weight: bold;
-  }
+.test-header {
+  border-radius: 4px;
+  padding: 2px;
+  padding-right: 8px;
+  padding-left: 8px;
+  font-weight: bold;
+  margin-bottom: 5px;
 
-  .json-string {
-    color: #8fbcbb !important; /* teal */
-  }
+}
 
-  .json-boolean {
-    color: #bf616a !important; /* red */
-  }
+.test-description {
+  margin-bottom: 5px;
+}
 
-  .json-null {
-    color: #ebcb8b !important; /* yellow */
-  }
-  .json-key {
-    color: blue !important; /* yellow */
-  }
+.test-result {
+  padding: 5px;
+  margin-top: 5px;
+  background-color: var(--ctp-base) !important;
+}
+
+.test-success {
+  border-radius: 4px;
+  padding: 2px;
+  padding-right: 8px;
+  padding-left: 8px;
+  background-color: rgb(166, 218, 149) !important;
+  color: rgb(54, 58, 79) !important;
+}
+
+.test-failure {
+  border-radius: 4px;
+  padding: 2px;
+  padding-right: 8px;
+  padding-left: 8px;
+  background-color: rgb(237, 135, 150) !important;
+  color: rgb(54, 58, 79) !important;
+}
+
+.json-key {
+  color: #d08770 !important;
+  /* orange */
+  font-weight: bold;
+}
+
+.json-string {
+  color: #8fbcbb !important;
+  /* teal */
+}
+
+.json-boolean {
+  color: #bf616a !important;
+  /* red */
+}
+
+.json-null {
+  color: #ebcb8b !important;
+  /* yellow */
+}
+
+.json-key {
+  color: blue !important;
+  /* yellow */
+}
 
 
 a {
@@ -81,8 +108,18 @@ p {
   /* overflow: hidden !important; */
   border-radius: 12px !important;
   background: var(--ctp-surface1);
-  border-color: var(--ctp-mauve) !important;
+  border-color: var(--ctp-teal) !important;
+  color: var(--ctp-teal) !important;
 }
+
+* {
+  transition-property: none;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 500ms;
+  -moz-transition-property: fill, background-color, color;
+  -o-transition-property: fill, background-color, color;
+}
+
 
 body,
 path {
