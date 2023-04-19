@@ -40,7 +40,7 @@ def get_content_metadata():
         with open(os.path.join(CONTENT_FOLDER, 'metadata.json')) as f:
             return f.read()
     except FileNotFoundError:
-        return '', 404
+        return 'Metadata not found', 404
 
 
 @app.route('/articles/<category>/<article>', methods=['GET'])
@@ -53,20 +53,20 @@ def get_article(category, article):
         article_text = f.read()
 
     metadata = load_metadata()
-    if article not in metadata:
+    if article not in metadata[category]:
         return jsonify({"message": "Metadata not found for article"}), 404
 
 
-    if article not in metadata or "engagement" not in metadata[article]:
-        return jsonify({"message": "Metadata not found for article or engagement key not found"}), 404
-    if "views" not in metadata[article]["engagement"]:
-        metadata[article]["engagement"]["views"] = 0
-    metadata[article]["engagement"]["views"] += 1
+    # if article not in metadata or "engagement" not in metadata[category][article]:
+    #     return jsonify({"message": "Metadata not found for article or engagement key not found"}), 404
+    # if "views" not in metadata[category][article]["engagement"]:
+    #     metadata[category][article]["engagement"]["views"] = 0
+    metadata[category][article]["engagement"]["views"] += 1
 
 
     save_metadata(metadata)
 
-    return jsonify({"article_text": article_text, "metadata": metadata[article]}), 200
+    return jsonify({"article_text": article_text, "metadata": metadata[category][article]}), 200
 
 
 @app.route('/articles/<category>/<article>', methods=['PATCH'])
@@ -77,18 +77,18 @@ def patch_article(category, article):
         return jsonify({"message": "Article not found"}), 404
 
     metadata = load_metadata()
-    if article not in metadata:
+    if article not in metadata[category]:
         return jsonify({"message": "Metadata not found for article"}), 404
 
     req_data = request.get_json()
     for key, value in req_data.items():
-        if key in metadata[article]:
-            metadata[article][key] = value
+        if key in metadata[category]:
+            metadata[category][article][key] = value
 
-    metadata["modified_at"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    metadata[category][article]["modified_at"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     save_metadata(metadata)
 
-    return jsonify({"metadata": metadata[article]}), 200
+    return jsonify({"metadata": metadata[category][article]}), 200
 
 
 @app.route('/articles/<category>/<article>', methods=['PUT'])
@@ -109,26 +109,28 @@ def put_article(category, article):
     else:
         payload = None
 
-    metadata = load_metadata()
-
     template = None
     with open(os.path.join(CONTENT_FOLDER, "mt.json"), "r") as f:
         template = json.load(f)
 
-    metadata[article] = template.copy()
+    metadata = load_metadata()
+    if category not in metadata:
+        metadata[category] = {}
+    if article not in metadata[category]:
+        metadata[category][article] = template.copy()
 
     if payload:
-        metadata[article].update(payload)
+        metadata[category][article].update(payload)
 
     for key in template:
-        if key not in metadata[article]:
-            metadata[article][key] = template[key]
+        if key not in metadata[category][article]:
+            metadata[category][article][key] = template[key]
 
-    metadata[article]["created_at"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    metadata[category][article]["created_at"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     save_metadata(metadata)
 
-    return jsonify({"metadata": metadata[article]}), 201
+    return jsonify({"metadata": metadata[category][article]}), 201
 
 
 @app.route("/media/<category>/<article>/<media_type>/<filename>", methods=["PUT"])
@@ -155,8 +157,8 @@ def put_media(category, article, media_type, filename):
 
     # Update metadata for the uploaded image
     metadata = load_metadata()
-    metadata[article][media_type].append(file_path)
-    metadata[article]["modified_at"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    metadata[category][article][media_type].append(file_path)
+    metadata[category][article]["modified_at"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     save_metadata(metadata)
 
     return jsonify({"message": "Media uploaded successfully"}), 201
@@ -185,32 +187,32 @@ def get_media(category, article, media_type, filename):
     return send_from_directory(media_dir, filename), 200
 
 
-@app.route('/media/<category>/<article_id>/<media_type>/<media_id>', methods=['DELETE'])
+@app.route('/media/<category>/<article>/<media_type>/<media>', methods=['DELETE'])
 @jwt_required()
-def delete_media(category, article_id, media_type, media_id):
+def delete_media(category, article, media_type, media):
     # Check if article and media exist
 
     if media_type == "cover":
-        media_path = os.path.join(CONTENT_FOLDER, category, article_id, f"{media_id}")
+        media_path = os.path.join(CONTENT_FOLDER, category, article, f"{media}")
     else:
-        media_path = os.path.join(CONTENT_FOLDER, category, article_id, media_type, f"{media_id}")
+        media_path = os.path.join(CONTENT_FOLDER, category, article, media_type, f"{media}")
 
     if not os.path.exists(media_path):
-        return f"{media_type} with id {media_id} not found for article {article_id} in category {category}", 404
+        return f"{media_type} with id {media} not found for article {article} in category {category}", 404
 
     # Delete the media file
     os.remove(media_path)
 
     # Update metadata for the deleted media
     metadata = load_metadata()
-    if media_type not in metadata[article_id]:
-        metadata[article_id][media_type] = {}
-    metadata[article_id][media_type].remove(media_path)
-    metadata[article_id]["modified_at"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    if media_type not in metadata[category][article]:
+        metadata[category][article][media_type] = {}
+    metadata[category][article][media_type].remove(media_path)
+    metadata[category][article]["modified_at"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     save_metadata(metadata)
 
-    return f"{media_type} with id {media_id} deleted for article {article_id} in category {category}", 200
+    return f"{media_type} with id {media} deleted for article {article} in category {category}", 200
 
 
 @app.route('/articles/<category>/<article>', methods=['DELETE'])
@@ -221,11 +223,11 @@ def delete_article(category, article):
         return jsonify({"message": "Article not found"}), 404
 
     metadata = load_metadata()
-    if article not in metadata:
+    if article not in metadata[category]:
         return jsonify({"message": "Metadata not found for article"}), 404
 
     os.system("rm -r {}".format(article_folder))
-    del metadata[article]
+    del metadata[category][article]
     save_metadata(metadata)
 
     return jsonify({"message": "Article deleted"}), 200

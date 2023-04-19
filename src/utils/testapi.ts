@@ -2,7 +2,7 @@ import { api } from "../main";
 
 export async function testCreateArticle() {
   try {
-    const response = await api.createArticle("tag", "name", "content");
+    const response = await api.createArticle("test_category", "test_article");
     return { success: true, data: response, name: "CREATE Article" };
   } catch (error) {
     return { success: false, error: error, name: "CREATE Article" };
@@ -11,7 +11,7 @@ export async function testCreateArticle() {
 
 export async function testUpdateArticle() {
   try {
-    const response = await api.updateArticle("tag", "name", "new content");
+    const response = await api.updateArticle("test_category", "test_article", "new content");
     return { success: true, data: response, name: "UPDATE Article" };
   } catch (error) {
     return { success: false, error: error, name: "UPDATE Article" };
@@ -20,7 +20,7 @@ export async function testUpdateArticle() {
 
 export async function testUploadMedia() {
   try {
-    const buffer = await api.uploadMedia('tag', 'name', 'videos', 'video.heif', new File([''], 'video.heif', { type: 'video/heif' }));
+    const buffer = await api.uploadMedia("test_category", "test_article", "videos", "video.heif", new File([""], "video.heif", { type: "video/heif" }));
     return { success: true, data: buffer, name: "UPLOAD Media" };
   } catch (error) {
     return { success: false, error: error, name: "UPLOAD Media" };
@@ -29,8 +29,8 @@ export async function testUploadMedia() {
 
 export async function testGetVideo() {
   try {
-    await api.getMedia("tag", "name", "videos", "video.heif");
-    return { success: true, name: "GET Media" };
+    const media = await api.getMedia("test_category", "test_article", "videos", "video.heif");
+    return { success: true, data: media,  name: "GET Media" };
   } catch (error) {
     console.log(error)
     return { success: false, error: error, name: "GET Media" };
@@ -39,7 +39,8 @@ export async function testGetVideo() {
 
 export async function testGetArticle() {
   try {
-    const article = await api.getArticle("tag", "name");
+    const article = await api.getArticle("test_category", "test_article");
+    console.log(article)
     return { success: true, data: article, name: "GET Article" };
   } catch (error) {
     return { success: false, error: error, name: "GET Article" };
@@ -57,8 +58,8 @@ export async function testGetArticleMetadata() {
 
 export async function testDeleteMedia() {
   try {
-    await api.deleteMedia("tag", "name", "videos", "video.heif");
-    return { success: true, name: "DELETE Media" };
+    const response = await api.deleteMedia("test_category", "test_article", "videos", "video.heif");
+    return { success: true, data: response, name: "DELETE Media" };
   } catch (error) {
     return { success: false, error: error, name: "DELETE Media" };
   }
@@ -66,8 +67,8 @@ export async function testDeleteMedia() {
 
 export async function testDeleteArticle() {
   try {
-    await api.deleteArticle("tag", "name");
-    return { success: true, name: "DELETE Article" };
+    const response = await api.deleteArticle("test_category", "test_article");
+    return { success: true, data: response, name: "DELETE Article" };
   } catch (error) {
     return { success: false, error: error, name: "DELETE Article" };
   }

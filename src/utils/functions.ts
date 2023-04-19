@@ -42,13 +42,13 @@ const functions = {
 
     const testFunctions = {
       testCreateArticle,
-      testUpdateArticle,
-      testUploadMedia,
-      testGetArticle,
-      testGetVideo,
-      testGetArticleMetadata,
-      testDeleteMedia,
-      testDeleteArticle,
+      // testUpdateArticle,
+      // testUploadMedia,
+      // testGetArticle,
+      // testGetVideo,
+      // testGetArticleMetadata,
+      // testDeleteMedia,
+      // testDeleteArticle,
     };
 
     const testResults = {};

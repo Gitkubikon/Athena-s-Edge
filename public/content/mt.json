@@ -1,5 +1,4 @@
 {
-  "main_tag": "",
   "images": [],
   "videos": [],
   "tags": [],
@@ -13,6 +12,7 @@
     "sentiment_keywords": ""
   },
   "engagement": {
+    "views": 0,
     "likes": 0,
     "comments": 0,
     "shares": 0

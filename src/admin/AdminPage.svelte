@@ -11,51 +11,22 @@
     crossfade,
   } from "svelte/transition";
 
+  const gifUrl = "https://media.tenor.com/TLhWkKdr770AAAAd/giga-chad.gif";
   onUltraMount(() => {});
 </script>
 
-<section
-  transition:fly={{ y: -200 }}
-  class="absolute left-0 flex flex-col justify-center"
->
-  <div class=" pos terminal">
-    <!-- <h1>{`${getCookieValue("user").toUpperCase()}'s CONSOLE`}</h1> -->
-    <h1>CHAD'S CONSOLE</h1>
+<section transition:fly={{ y: -200 }}>
+  <div class="pos terminal">
+    <div
+      style="display: flex; flex-direction: row; justify-content: center; align-content: center;"
+    >
+      <!-- <h1>{`${getCookieValue("user").toUpperCase()}'s CONSOLE`}</h1> -->
+      <div class="circle">
+        <img src={gifUrl} alt="Embedded GIF" />
+      </div>
+      <h1>CHAD'S CONSOLE</h1>
+    </div>
     <div class="buttons flex flex-wrap justify-between py-4 px-10">
-      <div class="function:auth m-10 button ultrafocus font-semibold py-2 px-4">
-        Authenticate
-      </div>
-      <div
-        class="function:downPlan m-10 button ultrafocus font-semibold py-2 px-4"
-      >
-        Download Plan
-      </div>
-      <div class="function:lock m-10 button ultrafocus font-semibold py-2 px-4">
-        Lock
-      </div>
-      <div class="function:list m-10 button ultrafocus font-semibold py-2 px-4">
-        List
-      </div>
-      <div
-        class="function:upload m-10 button ultrafocus font-semibold py-2 px-4"
-      >
-        Upload
-      </div>
-      <div
-        class="function:download m-10 button ultrafocus font-semibold py-2 px-4"
-      >
-        Download
-      </div>
-      <div
-        class="function:notify m-10 button ultrafocus font-semibold py-2 px-4"
-      >
-        Notify
-      </div>
-      <div
-        class="function:timetable m-10 button ultrafocus font-semibold py-2 px-4"
-      >
-        Timetable
-      </div>
       <div
         class="function:TestApi m-10 button ultrafocus font-semibold py-2 px-4"
       >
@@ -113,5 +84,22 @@
     margin-bottom: 50px;
     margin-top: 50px;
   }
-</style>
+  .circle {
+    background-color: transparent;
+    border: 2px solid;
+    border-radius: 50%;
+    display: inline-block;
+    height: 46px; /* 35px width + 2*3px border */
+    width: 46px; /* 35px height + 2*3px border */
+    overflow: hidden;
+    margin-right: 10px;
+    margin-top: -3px;
+    align-self: center;
+  }
 
+  .circle img {
+    margin-right: 10px;
+    width: 45px;
+    height: 45px;
+  }
+</style>
