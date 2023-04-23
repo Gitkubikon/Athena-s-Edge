@@ -2,60 +2,44 @@ import openai
 import json
 import os
 
-# Set your OpenAI API key
-openai.api_key = "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"
+# Set up OpenAI API credentials
+openai.api_key = "INSERT_YOUR_API_KEY_HERE"
 
-# Define the path to the metadata file
-metadata_file = "./content/metadata.json"
+# Load metadata.json file or create new dictionary
+if os.path.exists("content/metadata.json"):
+    with open("content/metadata.json", "r") as f:
+        metadata = json.load(f)
+else:
+    metadata = {"unindexed": {}}
 
-# Define the path to the content directory
-content_dir = "./content"
+# Create "unindexed" key in metadata dictionary if it doesn't exist
+if "unindexed" not in metadata:
+    metadata["unindexed"] = {}
 
-# Load the metadata file
-with open(metadata_file, "r") as f:
-    metadata = json.load(f)
+# Loop through files in unindexed directory
+for article in os.listdir("content/unindexed"):
+    # Check if file is a directory
+    if os.path.isdir(os.path.join("content/unindexed", article)):
+        # Load index.md file for article
+        with open(os.path.join("content/unindexed", article, "index.md"), "r") as f:
+            content = f.read()
 
-# Loop through the articles in the metadata file
-for filename, info in metadata.items():
-    # Define the path to the article file
-    filepath = os.path.join(content_dir, info["main_tag"], filename)
+        # Prompt OpenAI API to extract categories from article content
+        response = openai.Completion.create(
+            engine="text-davinci-002",
+            prompt=f"Extract categories from the following article:\n{content}\n\nCategories:",
+            max_tokens=1024,
+            n=1,
+            stop="Categories:",
+            temperature=0.7,
+        )
 
-    # Check if the article file exists
-    if not os.path.exists(filepath):
-        # If the article file does not exist, print an error message
-        print(f"Error: {filepath} does not exist")
-        continue
+        # Extract categories from OpenAI API response
+        categories = [c["text"].strip() for c in response.choices[0].text.split("\n") if c["text"].strip()]
 
-    # Read the article file
-    with open(filepath, "r") as f:
-        article = f.read()
+        # Update metadata.json file with categories for article
+        metadata["unindexed"][article] = {"categories": categories}
 
-    # Call the OpenAI API to categorize the article
-    response = openai.Completion.create(
-        engine="text-davinci-002",
-        prompt=f"Categorize the article:\n{article}\n",
-        max_tokens=1024,
-        n=1,
-        stop=None,
-        temperature=0.5,
-    )
-
-    # Get the category tags from the OpenAI API response
-    tags = response["choices"][0]["text"].strip().split(",")
-    tags = [tag.strip() for tag in tags]
-
-    # Set the tags and main_tag values in the metadata file
-    info["tags"] = tags
-    info["main_tag"] = os.path.basename(os.path.dirname(filepath))
-
-    # Write the updated metadata file
-    with open(metadata_file, "w") as f:
-        json.dump(metadata, f)
-
-    # Move the article file to the new directory based on the main_tag value
-    new_dir = os.path.join(content_dir, info["main_tag"])
-    os.makedirs(new_dir, exist_ok=True)
-    os.rename(filepath, os.path.join(new_dir, filename))
-
-    # Log the tags and main_tag
-    print(f"{filename} categorized as {', '.join(tags)} and moved to {new_dir}")
+# Save updated metadata.json file
+with open("content/metadata.json", "w") as f:
+    json.dump(metadata, f, indent=4)

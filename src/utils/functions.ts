@@ -30,6 +30,9 @@ const functions = {
   Home: () => {
     page.set("Home")
   },
+  Article: () => {
+    page.set("Article")
+  },
   AdminPage: () => {
     page.set("AdminPage")
   },

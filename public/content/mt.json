@@ -3,6 +3,9 @@
   "videos": [],
   "tags": [],
   "popularity": 0,
+  "description": "",
+  "cover": "",
+  "background": "",
   "sentiment": {
     "sentiment_categories": {
       "positive": "",

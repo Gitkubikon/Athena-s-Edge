@@ -44,9 +44,19 @@
         </g>
       </svg>
     </div>
-    <nav>
+    <div class="credits">
+      <p>&copy; {year} Athena's Edge. All rights reserved.</p>
+      <p>Made with ❤️ by your friendly AI assistant.</p>
+    </div>
+    <div
+      style="display: flex; flex-direction: row; justify-content: center; width: 100%; margin-top: 20px;"
+    >
       <div class="function:Github button ultrafocus">
-        <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+        <svg
+          class="svg"
+          role="img"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
           ><title>GitHub</title><path
             fill-rule="evenodd"
             fill="var(--ctp-mauve)"
@@ -55,7 +65,11 @@
         >
       </div>
       <div class="function:Patreon button ultrafocus">
-        <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+        <svg
+          class="svg"
+          role="img"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
           ><title>Patreon</title><path
             fill-rule="evenodd"
             fill="var(--ctp-mauve)"
@@ -64,7 +78,11 @@
         >
       </div>
       <div class="function:Instagram button ultrafocus">
-        <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+        <svg
+          class="svg"
+          role="img"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
           ><title>Instagram</title><path
             fill-rule="evenodd"
             fill="var(--ctp-mauve)"
@@ -73,7 +91,11 @@
         >
       </div>
       <div class="function:LinkedIn button ultrafocus">
-        <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+        <svg
+          class="svg"
+          role="img"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
           ><title>LinkedIn</title><path
             fill-rule="evenodd"
             fill="var(--ctp-mauve)"
@@ -81,10 +103,6 @@
           /></svg
         >
       </div>
-    </nav>
-    <div class="credits">
-      <p>&copy; {year} Athena's Edge. All rights reserved.</p>
-      <p>Made with ❤️ by your friendly AI assistant.</p>
     </div>
   </div>
 </footer>
@@ -105,18 +123,12 @@
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    max-width: 960px;
     margin: 0 auto;
     padding: 0 1rem;
   }
 
   .logo {
     flex: 1 0 200px;
-  }
-
-  svg {
-    margin: 6px;
-    height: 30px;
   }
 
   .logo img {
@@ -154,7 +166,12 @@
   footer {
     bottom: 0px;
     width: calc(100% + 120px);
-    margin-left: -59px;
+    margin-left: -56px;
     margin-bottom: 50px;
+    margin-right: -56px;
+  }
+  .svg {
+    margin: 6px;
+    height: 30px;
   }
 </style>

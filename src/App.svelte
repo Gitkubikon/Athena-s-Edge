@@ -15,6 +15,7 @@
   import AdminPage from "./admin/AdminPage.svelte";
   import StyleGuide from "./routes/StyleGuide.svelte";
   import Footer from "./components/Footer.svelte";
+  import Test from "./test.svelte";
 
   const pages = [
     { id: "Login", component: Login },
@@ -38,7 +39,7 @@
   if (getCookieValue("token")) {
     document
       .querySelector(":root")
-      .style.setProperty("--ctp-mauve", "rgb(237, 135, 150)");
+      .style.setProperty("--ctp-mauve", "rgb(125, 196, 228)");
     page.set("AdminPage");
   }
 
@@ -69,6 +70,7 @@
 </main>
 
 <Trailer />
+<!-- <Test /> -->
 
 <style>
 </style>

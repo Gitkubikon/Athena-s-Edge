@@ -5,7 +5,7 @@
   onUltraMount(() => {});
 </script>
 
-<section transition:fly={{ y: -200 }}>
+<section style="display: flex; justify-content: center; align-content: center;" transition:fly={{ y: -200 }}>
   <div id="stg">
     <div
       class="ultrafocus button color function:copyColor"
@@ -36,12 +36,6 @@
       style="color: var(--ctp-subtext1);  background-color: var(--ctp-overlay1)"
     >
       overlay1
-    </div>
-    <div
-      class="ultrafocus button color function:copyColor"
-      style="color: var(--ctp-overlay2);  background-color: rvar(--ctp-overlay0)"
-    >
-      overlay0
     </div>
     <div
       class="ultrafocus button color function:copyColor"
@@ -163,14 +157,33 @@
     >
       lavender
     </div>
+    <div
+      class="ultrafocus button color function:copyColor"
+      style="color: var(--ctp-overlay2);  background-color: rvar(--ctp-overlay0)"
+    >
+      overlay0
+    </div>
   </div>
 </section>
 
 <style>
   .color {
     height: 3.5vh;
+    padding: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
   }
   #stg {
+    position: absolute;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
     height: 140%;
+    max-width: 800px;
+    max-height: 400px;
+    padding: 2rem;
+    border-radius: 5px;
+    background-color: rgb(180, 197, 228);
+    box-shadow: 5px 5px 5px var(--ctp-mauve);
   }
 </style>

@@ -6,10 +6,10 @@
 <nav id="sidenav">
   <div id="sideElementPlacing">
     <div id="contrarotate">
-      <div />
+      <div style="height: 40px;" />
       <div class="flex flex-col">
         <!-- <div class="button ultrafocus" /> -->
-        <div class="button ultrafocus">
+        <div class="button ultrafocus function:Home">
           <svg
             class="navsvg"
             width="45"

@@ -41,7 +41,6 @@ def get_content_metadata():
     except FileNotFoundError:
         return 'Metadata not found', 404
 
-
 @app.route('/articles/<category>/<article>', methods=['GET'])
 def get_article(category, article):
     article_folder = os.path.join(CONTENT_FOLDER, category, article)
@@ -49,7 +48,7 @@ def get_article(category, article):
         return jsonify({"message": "Article not found"}), 404
 
     with open(os.path.join(article_folder, "index.md"), "r") as f:
-        article_text = f.read()
+        content = f.read()
 
     metadata = load_metadata()
     if article not in metadata[category]:
@@ -60,12 +59,13 @@ def get_article(category, article):
     #     return jsonify({"message": "Metadata not found for article or engagement key not found"}), 404
     # if "views" not in metadata[category][article]["engagement"]:
     #     metadata[category][article]["engagement"]["views"] = 0
-    metadata[category][article]["engagement"]["views"] += 1
+    # metadata[category][article]["engagement"]["views"] += 1
 
 
     save_metadata(metadata)
 
-    return jsonify({"article_text": article_text, "metadata": metadata[category][article]}), 200
+    return jsonify({"content": content, "metadata": metadata[category][article]}), 200
+
 
 
 @app.route('/articles/<category>/<article>', methods=['PATCH'])
@@ -75,15 +75,18 @@ def patch_article(category, article):
     if not os.path.exists(article_folder):
         return jsonify({"message": "Article not found"}), 404
 
+    if request.json is not None:
+        content = request.json.get('content', '')
+        print(content)
+        with open(os.path.join(article_folder, "index.md"), "w") as f:
+            f.write(content)
+
     metadata = load_metadata()
     if article not in metadata[category]:
         return jsonify({"message": "Metadata not found for article"}), 404
 
-    req_data = request.get_json()
-    for key, value in req_data.items():
-        if key in metadata[category]:
-            metadata[category][article][key] = value
-
+    # req_data = request.get_json()
+    # metadata[category][article].update(req_data)
     metadata[category][article]["modified_at"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     save_metadata(metadata)
 
@@ -138,7 +141,7 @@ def put_media(category, article, media_type, filename):
     if media_type not in ["images", "videos"]:
         return f"{media_type} not allowed", 400
 
-    if media_type == "cover":
+    if media_type == "cover" or media_type == "background":
         media_dir = os.path.join(CONTENT_FOLDER, category, article)
     else:
         media_dir = os.path.join(CONTENT_FOLDER, category, article, media_type)

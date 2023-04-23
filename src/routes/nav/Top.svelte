@@ -35,6 +35,10 @@
     </svg>
   </div>
   <div id="divider-center" />
+
+      
+
+
   <div class="flex topnav-buttons justify-start">
     <div class="function button ultrafocus">
       <svg
@@ -109,4 +113,5 @@
   #divider-center {
     width: 52vw;
   }
+
 </style>
