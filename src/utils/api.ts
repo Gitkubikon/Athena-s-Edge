@@ -3,7 +3,6 @@ import { getCookieValue, setCookie } from "./shenanigans";
 
 interface ArticleMetadata {
   [key: string]: {
-    main_tag: string;
     images?: string[];
     videos?: string[];
     tags?: string[];
