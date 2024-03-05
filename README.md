@@ -118,7 +118,6 @@ export default writable(0)
 ### Install and run 
 
 ```
-cd hive-dashboard
 npm install
 npm run dev
 ```
